@@ -5,3 +5,6 @@
     font-size: 40px;
     padding: 5px 10px 10px 5px;
 }
+.card-title {
+    font-weight:bolder;
+}

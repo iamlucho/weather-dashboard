@@ -1,0 +1,7 @@
+#grad {
+    background-image: linear-gradient(to left, rgb(38, 19, 96) , rgb(70,90,184));
+    color:white;
+    font-weight:bolder;
+    font-size: 40px;
+    padding: 5px 10px 10px 5px;
+}

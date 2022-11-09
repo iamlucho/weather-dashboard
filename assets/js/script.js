@@ -1,7 +1,4 @@
 var APIkey = "c0478d832f60e03d9f3b44027792c176";
-var URLCity = "http://api.openweathermap.org/geo/1.0/direct?q=";
-var coordLon = "";
-var coordLat = "";
 
 //onclick event for search button
 $("#searchbtn").on("click", function () {
@@ -35,7 +32,7 @@ function loadButtons(){
     document.getElementById("searchTag").innerHTML = "";
     var buttonNames = JSON.parse(localStorage.getItem("cities"));
     for (let i = 0; i < buttonNames.length; i++) {
-        htmlCode = "<button type='button' class='btn btn-secondary w-100 mb-3'>" + buttonNames[i] + "</button>";    
+        htmlCode = "<button type='button' class='btn btn-secondary w-100 mb-3' id=" + buttonNames[i] + " onclick='getCoordinates(this.id)'>" + buttonNames[i] + "</button>";    
         $('#searchTag').append(htmlCode);
     }
 }
@@ -68,8 +65,13 @@ function getWeather(lat, lon){
     })
     .then(function(data){
         console.log(data);
-
-
+        let date = new Date().toLocaleDateString();        
+        var img = $("<img>").attr("src", "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png");
+        $("#maincardcity").append(data.name + " (" + date + ")");
+        $("#maincardcity").append(img);
+        $("#maincardtemp").append("Temp: "+ data.main.temp + " °F");
+        $("#maincardwind").append("Wind: "+ data.wind.speed + " MPH");
+        $("#maincardhumi").append("Humidity: "+ data.main.humidity + " %");
     })
     .catch(error => {
         // handle the error

@@ -8,3 +8,13 @@
 .card-title {
     font-weight:bolder;
 }
+.card {
+    border-style: none;
+}
+#maincard {
+    border-style: solid;
+
+}
+#inputsearchcity{
+    margin-bottom: 10px;
+}

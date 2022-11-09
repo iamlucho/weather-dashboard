@@ -1,3 +1,8 @@
+var APIkey = "c0478d832f60e03d9f3b44027792c176";
+var URLCity = "http://api.openweathermap.org/geo/1.0/direct?q=";
+var coordLon = "";
+var coordLat = "";
+
 //onclick event for search button
 $("#searchbtn").on("click", function () {
     //set variable to pass user city input 
@@ -6,6 +11,7 @@ $("#searchbtn").on("click", function () {
     $("#inputsearchcity").val("");
     saveHistory(inputcity);
     loadButtons();
+    getCoordinates(inputcity);
   });
 
 function saveHistory(searchText){
@@ -33,3 +39,42 @@ function loadButtons(){
         $('#searchTag').append(htmlCode);
     }
 }
+function getCoordinates(cityname){
+    var urlCoods = "http://api.openweathermap.org/geo/1.0/direct?q=" + cityname + "&limit=1&appid=" + APIkey
+    fetch(urlCoods)
+    .then(function(response){
+        // handle the response
+        console.log(response.status);
+        console.log(response.statusText);
+        return response.json();
+    })
+    .then(function(data){
+        getWeather(data[0].lat, data[0].lon);  
+    })
+    .catch(error => {
+        // handle the error
+        console.error('There has been a problem with the API request:', error);
+    });
+}
+
+function getWeather(lat, lon){
+    var urlCoods = "https://api.openweathermap.org/data/2.5/weather?lat="+ lat +"&lon=" + lon +"&units=imperial&appid="+ APIkey;
+    fetch(urlCoods)
+    .then(function(response){
+        // handle the response
+        console.log(response.status);
+        console.log(response.statusText);
+        return response.json();
+    })
+    .then(function(data){
+        console.log(data);
+
+
+    })
+    .catch(error => {
+        // handle the error
+        console.error('There has been a problem with the API request:', error);
+    });
+}
+
+

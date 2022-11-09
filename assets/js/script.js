@@ -5,6 +5,7 @@ $("#searchbtn").on("click", function () {
     //once seach button clicked, empty input field
     $("#inputsearchcity").val("");
     saveHistory(inputcity);
+    loadButtons();
   });
 
 function saveHistory(searchText){
@@ -22,5 +23,13 @@ function saveHistory(searchText){
     else{
         console.log('City already exists');
     }
-    
+}
+
+function loadButtons(){
+    document.getElementById("searchTag").innerHTML = "";
+    var buttonNames = JSON.parse(localStorage.getItem("cities"));
+    for (let i = 0; i < buttonNames.length; i++) {
+        htmlCode = "<button type='button' class='btn btn-secondary w-100 mb-3'>" + buttonNames[i] + "</button>";    
+        $('#searchTag').append(htmlCode);
+    }
 }

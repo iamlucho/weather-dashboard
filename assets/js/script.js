@@ -64,11 +64,14 @@ function getWeather(lat, lon){
         return response.json();
     })
     .then(function(data){
-        $("#maincardcity").empty();
+        // clear all innerHTML from tags
         $("#maincardcity").empty();
         $("#maincardtemp").empty();
         $("#maincardwind").empty();
         $("#maincardhumi").empty();
+
+        $("#maincard").addClass('border border-dark border-4');
+
         let date = new Date().toLocaleDateString();        
         $("#maincardcity").append(data.name + " (" + date + ")");
         var img = $("<img>").attr("src", "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png");
@@ -76,6 +79,39 @@ function getWeather(lat, lon){
         $("#maincardtemp").append("Temp: "+ data.main.temp + " °F");
         $("#maincardwind").append("Wind: "+ data.wind.speed + " MPH");
         $("#maincardhumi").append("Humidity: "+ data.main.humidity + " %");
+        getForecast(lat, lon);
+    })
+    .catch(error => {
+        // handle the error
+        console.error('There has been a problem with the API request:', error);
+    });
+}
+
+function getForecast(lat, lon){
+    var urlForecast = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&units=imperial&appid=" + APIkey;
+    fetch(urlForecast)
+    .then(function(response){
+        // handle the response
+        console.log("Forecast fetch: " + response.status);
+        console.log("Forecast fetch: " + response.statusText);
+        return response.json();
+    })
+    .then(function(data){
+        // clear all innerHTML from tags
+        console.log(data.list)
+        $("#forecastTitle").empty();
+        $("#forecastCards").empty();
+        $("#forecastTitle").append("<h1>5-Day Forecast:</h1>");
+        for(let i = 1; i < data.list.length; i += 8){
+            var cardDate = new Date(data.list[i].dt * 1000);
+            var innerHTML = "<div class='col'><div class='card'><div id='forecast' class='card-body'>" +
+                            "<h4 class='card-title'>" + cardDate.toLocaleDateString("en-US") + "</h4>" +
+                            "<img src='https://openweathermap.org/img/w/" + data.list[i].weather[0].icon + ".png'>" +
+                            "<p class='card-text'>Temp: " + data.list[i].main.temp + " °F</p>" +
+                            "<p class='card-text'>Wind: " + data.list[i].wind.speed +  " MPH</p>" +
+                            "<p class='card-text'>Humidity: " + data.list[i].main.humidity +  " %</p>";
+            $("#forecastCards").append(innerHTML);            
+        }
     })
     .catch(error => {
         // handle the error

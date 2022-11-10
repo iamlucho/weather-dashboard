@@ -11,10 +11,11 @@
 .card {
     border-style: none;
 }
-#maincard {
-    border-style: solid;
-
-}
 #inputsearchcity{
     margin-bottom: 10px;
+}
+#forecast{
+    color: white;
+    background-color: rgb(50,61,79);
+    border-radius: 5px;
 }

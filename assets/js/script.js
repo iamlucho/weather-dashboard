@@ -37,7 +37,7 @@ function loadButtons(){
     }
 }
 function getCoordinates(cityname){
-    var urlCoods = "http://api.openweathermap.org/geo/1.0/direct?q=" + cityname + "&limit=1&appid=" + APIkey
+    var urlCoods = "https://api.openweathermap.org/geo/1.0/direct?q=" + cityname + "&limit=1&appid=" + APIkey
     fetch(urlCoods)
     .then(function(response){
         // handle the response
@@ -64,10 +64,14 @@ function getWeather(lat, lon){
         return response.json();
     })
     .then(function(data){
-        console.log(data);
+        $("#maincardcity").empty();
+        $("#maincardcity").empty();
+        $("#maincardtemp").empty();
+        $("#maincardwind").empty();
+        $("#maincardhumi").empty();
         let date = new Date().toLocaleDateString();        
-        var img = $("<img>").attr("src", "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png");
         $("#maincardcity").append(data.name + " (" + date + ")");
+        var img = $("<img>").attr("src", "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png");
         $("#maincardcity").append(img);
         $("#maincardtemp").append("Temp: "+ data.main.temp + " °F");
         $("#maincardwind").append("Wind: "+ data.wind.speed + " MPH");

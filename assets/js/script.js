@@ -26,8 +26,9 @@ function saveHistory(searchText){
     var searchCities = JSON.parse(localStorage.getItem("cities"));
     //format input text to accomodate for uppercase and lowercase characters
     var formattedCities = searchText.charAt(0).toUpperCase() + searchText.slice(1).toLowerCase();
-
+    //check if array has value insid, if not create an empty array
     if(searchCities == null) searchCities = [];
+    //search the array to see if the City is already in the history
     if (searchCities.indexOf(formattedCities)===-1){
         searchCities.push(formattedCities);
         localStorage.setItem("cities", JSON.stringify(searchCities));
@@ -37,16 +38,22 @@ function saveHistory(searchText){
     }
 }
 
+//function to load history search buttons
 function loadButtons(){
+    //clear innerHTML prior to updating
     document.getElementById("searchTag").innerHTML = "";
+    //load button names from localStorage
     var buttonNames = JSON.parse(localStorage.getItem("cities"));
+    //loop thru each to create the button
     for (let i = 0; i < buttonNames.length; i++) {
         htmlCode = "<button type='button' class='btn btn-secondary w-100 mb-3' id=" + buttonNames[i] + " onclick='getCoordinates(this.id)'>" + buttonNames[i] + "</button>";    
         $('#searchTag').append(htmlCode);
     }
+    //add a clear option at the end
     $('#searchTag').append("<a id='cleartext' href='#' onclick='clearHistory();return false;'>Clear History</a>");
 }
 
+//function to clear history and reset dashboard
 function clearHistory(){
     localStorage.clear();
     $('#searchTag').empty();
@@ -59,7 +66,7 @@ function clearHistory(){
     $("#maincard").removeClass('border border-dark border-4');
 }
 
-
+//function to get coordinates using the GEO API
 function getCoordinates(cityname){
     var urlCoods = "https://api.openweathermap.org/geo/1.0/direct?q=" + cityname + "&limit=1&appid=" + APIkey
     fetch(urlCoods)
@@ -70,6 +77,7 @@ function getCoordinates(cityname){
         return response.json();
     })
     .then(function(data){
+        //once lat and lon are found, pass them on to the getweather function
         getWeather(data[0].lat, data[0].lon);  
     })
     .catch(error => {
@@ -78,6 +86,7 @@ function getCoordinates(cityname){
     });
 }
 
+//function to get weather from API by using the lat and lon as arguments
 function getWeather(lat, lon){
     var urlCoods = "https://api.openweathermap.org/data/2.5/weather?lat="+ lat +"&lon=" + lon +"&units=imperial&appid="+ APIkey;
     fetch(urlCoods)
@@ -93,16 +102,19 @@ function getWeather(lat, lon){
         $("#maincardtemp").empty();
         $("#maincardwind").empty();
         $("#maincardhumi").empty();
-
+        //add border to main card
         $("#maincard").addClass('border border-dark border-4');
-
+        //get date and format accondingly
         let date = new Date().toLocaleDateString();        
         $("#maincardcity").append(data.name + " (" + date + ")");
+        //set img source using API response info for icon
         var img = $("<img>").attr("src", "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png");
         $("#maincardcity").append(img);
+        //append all remaining information to corresponding element
         $("#maincardtemp").append("Temp: "+ data.main.temp + " °F");
         $("#maincardwind").append("Wind: "+ data.wind.speed + " MPH");
         $("#maincardhumi").append("Humidity: "+ data.main.humidity + " %");
+        //run funtion to get 5 day forecast
         getForecast(lat, lon);
     })
     .catch(error => {
@@ -122,10 +134,11 @@ function getForecast(lat, lon){
     })
     .then(function(data){
         // clear all innerHTML from tags
-        console.log(data.list)
         $("#forecastTitle").empty();
         $("#forecastCards").empty();
+        //add title for 5 day forecast
         $("#forecastTitle").append("<h1>5-Day Forecast:</h1>");
+        //loop thru resuls and create card element for each day
         for(let i = 1; i < data.list.length; i += 8){
             var cardDate = new Date(data.list[i].dt * 1000);
             var innerHTML = "<div class='col'><div class='card'><div id='forecast' class='card-body'>" +

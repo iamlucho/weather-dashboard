@@ -1,3 +1,4 @@
+/* create gradient for nav bar background */ 
 #grad {
     background-image: linear-gradient(to left, rgb(38, 19, 96) , rgb(70,90,184));
     color:white;
@@ -5,21 +6,26 @@
     font-size: 40px;
     padding: 5px 10px 10px 5px;
 }
+/* add bold styler to card titles */ 
 .card-title {
     font-weight:bolder;
 }
+/* remove border from card */ 
 .card {
     border-style: none;
 }
+/* add margin to bottom of search city input field */ 
 #inputsearchcity{
     margin-bottom: 10px;
 }
+/* add formatting to forecast cards */ 
 #forecast{
     color: white;
     background-color: rgb(50,61,79);
     border-radius: 5px;
     margin: 5px 5px 5px 5px;
 }
+/* add formatting to clear button */ 
 #cleartext{
     font-size: 12px;
     text-decoration: none;

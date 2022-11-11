@@ -1,3 +1,4 @@
+//API key for authentication
 var APIkey = "c0478d832f60e03d9f3b44027792c176";
 
 //onclick event for search button
@@ -6,18 +7,26 @@ $("#searchbtn").on("click", function () {
     var inputcity = $("#inputsearchcity").val();
     //once seach button clicked, empty input field
     $("#inputsearchcity").val("");
+    //run all functions to complete search
+    //function to save to localStorage
     saveHistory(inputcity);
+    //load buttons from localStorage
     loadButtons();
+    //get coordinates for city name
     getCoordinates(inputcity);
   });
 
 function saveHistory(searchText){
+    //check if field is empty
     if (!searchText) {
         console.log('No city entered to search');
         return
     }
+    //read already existing localStorage
     var searchCities = JSON.parse(localStorage.getItem("cities"));
-    var formattedCities = searchText.charAt(0).toUpperCase() + searchText.slice(1);
+    //format input text to accomodate for uppercase and lowercase characters
+    var formattedCities = searchText.charAt(0).toUpperCase() + searchText.slice(1).toLowerCase();
+
     if(searchCities == null) searchCities = [];
     if (searchCities.indexOf(formattedCities)===-1){
         searchCities.push(formattedCities);
@@ -35,7 +44,22 @@ function loadButtons(){
         htmlCode = "<button type='button' class='btn btn-secondary w-100 mb-3' id=" + buttonNames[i] + " onclick='getCoordinates(this.id)'>" + buttonNames[i] + "</button>";    
         $('#searchTag').append(htmlCode);
     }
+    $('#searchTag').append("<a id='cleartext' href='#' onclick='clearHistory();return false;'>Clear History</a>");
 }
+
+function clearHistory(){
+    localStorage.clear();
+    $('#searchTag').empty();
+    $("#maincardcity").empty();
+    $("#maincardtemp").empty();
+    $("#maincardwind").empty();
+    $("#maincardhumi").empty();
+    $("#forecastTitle").empty();
+    $("#forecastCards").empty();
+    $("#maincard").removeClass('border border-dark border-4');
+}
+
+
 function getCoordinates(cityname){
     var urlCoods = "https://api.openweathermap.org/geo/1.0/direct?q=" + cityname + "&limit=1&appid=" + APIkey
     fetch(urlCoods)
